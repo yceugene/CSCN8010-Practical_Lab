@@ -1,0 +1,1899 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head></head><body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<main>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h1>Lab1<a rel="noopener" class="anchor-link" href="#Lab1">&#182;</a></h1><h2>1. Framing the Problem<a rel="noopener" class="anchor-link" href="#1.-Framing-the-Problem">&#182;</a></h2><ul>
+<li>This report is dedicated to find out which independent variable among, <code>median income</code>, <code>population</code>, and <code>number of households</code>, is more possible to predict the <code>housing price</code> on the <code>California Housing Prices Dataset</code>, when analizing with <code>Univariate Linear Regression</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[1]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Import libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">kagglehub</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kaggle.api.kaggle_api_extended</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaggleApi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2_score</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.backends.backend_agg</span><span class="w"> </span><span class="kn">import</span> <span class="n">FigureCanvasAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">seaborn.axisgrid</span><span class="w"> </span><span class="kn">import</span> <span class="n">JointGrid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">KFold</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>c:\Users\Eugene\Conestoga1\1.CSCN8010_MLF\CSCN8010-Practical_Lab01\vCSCN8010Lab01_Py312\Lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[2]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Setup environments</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span> 
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>0.13.2
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h2>2. Getting the Data<a rel="noopener" class="anchor-link" href="#2.-Getting-the-Data">&#182;</a></h2>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Data Source: Downloaded from <a rel="noopener" href="https://www.kaggle.com/datasets/camnugent/california-housing-prices/data">Kaggle California Housing Prices</a></p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[3]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Authenticate</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">KaggleApi</span><span class="p">()</span>
+<span class="n">api</span><span class="o">.</span><span class="n">authenticate</span><span class="p">()</span>
+
+<span class="c1"># Define the dataset</span>
+<span class="n">dataset_name</span> <span class="o">=</span> <span class="s2">&quot;camnugent/california-housing-prices&quot;</span>
+<span class="n">download_path</span> <span class="o">=</span> <span class="s2">&quot;../datasets&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">download_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">dataset_download_files</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">download_path</span><span class="p">,</span> <span class="n">unzip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dataset downloaded to </span><span class="si">{</span><span class="n">download_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>Dataset URL: https://www.kaggle.com/datasets/camnugent/california-housing-prices
+Dataset downloaded to ../datasets
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Load the dataset into Pandas</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[4]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="s2">&quot;../datasets/housing.csv&quot;</span>
+<span class="n">housing</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape of dataset: </span><span class="si">{</span><span class="n">housing</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">housing</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>Shape of dataset: (20640, 10)
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult">
+<div>
+
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>longitude</th>
+<th>latitude</th>
+<th>housing_median_age</th>
+<th>total_rooms</th>
+<th>total_bedrooms</th>
+<th>population</th>
+<th>households</th>
+<th>median_income</th>
+<th>median_house_value</th>
+<th>ocean_proximity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>-122.23</td>
+<td>37.88</td>
+<td>41.0</td>
+<td>880.0</td>
+<td>129.0</td>
+<td>322.0</td>
+<td>126.0</td>
+<td>8.3252</td>
+<td>452600.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>1</th>
+<td>-122.22</td>
+<td>37.86</td>
+<td>21.0</td>
+<td>7099.0</td>
+<td>1106.0</td>
+<td>2401.0</td>
+<td>1138.0</td>
+<td>8.3014</td>
+<td>358500.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>2</th>
+<td>-122.24</td>
+<td>37.85</td>
+<td>52.0</td>
+<td>1467.0</td>
+<td>190.0</td>
+<td>496.0</td>
+<td>177.0</td>
+<td>7.2574</td>
+<td>352100.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>3</th>
+<td>-122.25</td>
+<td>37.85</td>
+<td>52.0</td>
+<td>1274.0</td>
+<td>235.0</td>
+<td>558.0</td>
+<td>219.0</td>
+<td>5.6431</td>
+<td>341300.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>4</th>
+<td>-122.25</td>
+<td>37.85</td>
+<td>52.0</td>
+<td>1627.0</td>
+<td>280.0</td>
+<td>565.0</td>
+<td>259.0</td>
+<td>3.8462</td>
+<td>342200.0</td>
+<td>NEAR BAY</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>3. Exploratory Data Analysis (EDA)<a rel="noopener" class="anchor-link" href="#3.-Exploratory-Data-Analysis-(EDA)">&#182;</a></h3>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Get a summary of the main characteristics of the dataset.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">housing</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult">
+<div>
+
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>longitude</th>
+<th>latitude</th>
+<th>housing_median_age</th>
+<th>total_rooms</th>
+<th>total_bedrooms</th>
+<th>population</th>
+<th>households</th>
+<th>median_income</th>
+<th>median_house_value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>count</th>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20433.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+</tr>
+<tr>
+<th>mean</th>
+<td>-119.569704</td>
+<td>35.631861</td>
+<td>28.639486</td>
+<td>2635.763081</td>
+<td>537.870553</td>
+<td>1425.476744</td>
+<td>499.539680</td>
+<td>3.870671</td>
+<td>206855.816909</td>
+</tr>
+<tr>
+<th>std</th>
+<td>2.003532</td>
+<td>2.135952</td>
+<td>12.585558</td>
+<td>2181.615252</td>
+<td>421.385070</td>
+<td>1132.462122</td>
+<td>382.329753</td>
+<td>1.899822</td>
+<td>115395.615874</td>
+</tr>
+<tr>
+<th>min</th>
+<td>-124.350000</td>
+<td>32.540000</td>
+<td>1.000000</td>
+<td>2.000000</td>
+<td>1.000000</td>
+<td>3.000000</td>
+<td>1.000000</td>
+<td>0.499900</td>
+<td>14999.000000</td>
+</tr>
+<tr>
+<th>25%</th>
+<td>-121.800000</td>
+<td>33.930000</td>
+<td>18.000000</td>
+<td>1447.750000</td>
+<td>296.000000</td>
+<td>787.000000</td>
+<td>280.000000</td>
+<td>2.563400</td>
+<td>119600.000000</td>
+</tr>
+<tr>
+<th>50%</th>
+<td>-118.490000</td>
+<td>34.260000</td>
+<td>29.000000</td>
+<td>2127.000000</td>
+<td>435.000000</td>
+<td>1166.000000</td>
+<td>409.000000</td>
+<td>3.534800</td>
+<td>179700.000000</td>
+</tr>
+<tr>
+<th>75%</th>
+<td>-118.010000</td>
+<td>37.710000</td>
+<td>37.000000</td>
+<td>3148.000000</td>
+<td>647.000000</td>
+<td>1725.000000</td>
+<td>605.000000</td>
+<td>4.743250</td>
+<td>264725.000000</td>
+</tr>
+<tr>
+<th>max</th>
+<td>-114.310000</td>
+<td>41.950000</td>
+<td>52.000000</td>
+<td>39320.000000</td>
+<td>6445.000000</td>
+<td>35682.000000</td>
+<td>6082.000000</td>
+<td>15.000100</td>
+<td>500001.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Create three Seaborn scatter plots</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[6]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">housing</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult">
+<div>
+
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>longitude</th>
+<th>latitude</th>
+<th>housing_median_age</th>
+<th>total_rooms</th>
+<th>total_bedrooms</th>
+<th>population</th>
+<th>households</th>
+<th>median_income</th>
+<th>median_house_value</th>
+<th>ocean_proximity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>-122.23</td>
+<td>37.88</td>
+<td>41.0</td>
+<td>880.0</td>
+<td>129.0</td>
+<td>322.0</td>
+<td>126.0</td>
+<td>8.3252</td>
+<td>452600.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>1</th>
+<td>-122.22</td>
+<td>37.86</td>
+<td>21.0</td>
+<td>7099.0</td>
+<td>1106.0</td>
+<td>2401.0</td>
+<td>1138.0</td>
+<td>8.3014</td>
+<td>358500.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>2</th>
+<td>-122.24</td>
+<td>37.85</td>
+<td>52.0</td>
+<td>1467.0</td>
+<td>190.0</td>
+<td>496.0</td>
+<td>177.0</td>
+<td>7.2574</td>
+<td>352100.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>3</th>
+<td>-122.25</td>
+<td>37.85</td>
+<td>52.0</td>
+<td>1274.0</td>
+<td>235.0</td>
+<td>558.0</td>
+<td>219.0</td>
+<td>5.6431</td>
+<td>341300.0</td>
+<td>NEAR BAY</td>
+</tr>
+<tr>
+<th>4</th>
+<td>-122.25</td>
+<td>37.85</td>
+<td>52.0</td>
+<td>1627.0</td>
+<td>280.0</td>
+<td>565.0</td>
+<td>259.0</td>
+<td>3.8462</td>
+<td>342200.0</td>
+<td>NEAR BAY</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Define some dictionaries and functions to make the lab more structure.</p>
+<ul>
+<li>Dictionaries: <code>variables_dict</code>, <code>variables2_dict</code></li>
+<li>Functions: <code>Get_mse_mae()</code>, <code>ShowJoinPlot()</code></li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[7]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># A dictionary for the three independent variables. </span>
+<span class="n">variables_dict</span> <span class="o">=</span> <span class="p">{</span> 
+    <span class="s2">&quot;median_income&quot;</span><span class="p">:</span> <span class="p">{</span> 
+        <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="s2">&quot;median_income&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Median House Value vs. Median Income&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;median_income&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;population&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="s2">&quot;population&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Median House Value vs. Population&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;population&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;households&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="s2">&quot;households&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Median House Value vs. Number of Households&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;households&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># A dictionary for the three model results. </span>
+<span class="n">variables2_dict</span> <span class="o">=</span> <span class="p">{</span> 
+    <span class="s2">&quot;median_income&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="c1"># model1</span>
+        <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="s2">&quot;median_income&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;predict&quot;</span><span class="p">:</span> <span class="s2">&quot;m1_median_house_value&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;GroundTruth&quot;</span><span class="p">:</span> <span class="s2">&quot;median_house_value&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;intercept&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;slope&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;mse&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;mae&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;population&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="c1"># model2</span>
+        <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="s2">&quot;population&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;predict&quot;</span><span class="p">:</span> <span class="s2">&quot;m2_median_house_value&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;GroundTruth&quot;</span><span class="p">:</span> <span class="s2">&quot;median_house_value&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;intercept&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;slope&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;mse&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;mae&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;households&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="c1"># model3</span>
+        <span class="s2">&quot;col&quot;</span><span class="p">:</span> <span class="s2">&quot;households&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;predict&quot;</span><span class="p">:</span> <span class="s2">&quot;m3_median_house_value&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;GroundTruth&quot;</span><span class="p">:</span> <span class="s2">&quot;median_house_value&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;intercept&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;slope&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;mse&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;mae&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Get_mse_mae</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">round_para</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">round_para</span><span class="p">)</span>
+    <span class="n">mae</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">round_para</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mse</span><span class="p">,</span> <span class="n">mae</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[10]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ShowJoinPlot</span><span class="p">(</span><span class="n">var_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> 
+                 <span class="n">var_dict2</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dataset2</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># Create a figure with multiple subplots in the shape of (1 row, 3 colomns)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_dict</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_dict</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_dict</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">axes</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">var_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="c1"># Create a new figure &#39;jointplot&#39; for each variable.</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        
+        <span class="c1"># Add second dataset if exists</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset2</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            
+            <span class="c1"># For visalisation of the regression results.  </span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var_dict2</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">value2</span> <span class="o">=</span> <span class="n">var_dict2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">value2</span><span class="p">:</span>
+                    <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="n">value2</span><span class="p">[</span><span class="s2">&quot;intercept&quot;</span><span class="p">],</span> <span class="n">value2</span><span class="p">[</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span>
+
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                    Here sns.scatterplot was selected rather than plt.plot.</span>
+<span class="sd">                    We think it sounds more sence with scatter plot since our data are discretely.</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="c1"># plt.plot(dataset2[value2[&quot;col&quot;]], dataset2[value2[&quot;predict&quot;]], color=&#39;red&#39;, label=&#39;Regression Line&#39;)</span>
+                    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">dataset2</span><span class="p">[</span><span class="n">value2</span><span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="n">dataset2</span><span class="p">[</span><span class="n">value2</span><span class="p">[</span><span class="s2">&quot;predict&quot;</span><span class="p">]],</span>
+                                <span class="n">ax</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">ax_joint</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+                    <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">dataset2</span><span class="p">[</span><span class="n">value2</span><span class="p">[</span><span class="s2">&quot;predict&quot;</span><span class="p">]],</span> <span class="n">dataset2</span><span class="p">[</span><span class="n">value2</span><span class="p">[</span><span class="s2">&quot;GroundTruth&quot;</span><span class="p">]])</span>
+                    <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">dataset2</span><span class="p">[</span><span class="n">value2</span><span class="p">[</span><span class="s2">&quot;predict&quot;</span><span class="p">]],</span> <span class="n">dataset2</span><span class="p">[</span><span class="n">value2</span><span class="p">[</span><span class="s2">&quot;GroundTruth&quot;</span><span class="p">]])</span>
+                    
+                    <span class="n">g</span><span class="o">.</span><span class="n">ax_joint</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                        <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Intercept: </span><span class="si">{</span><span class="n">intercept</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">Slope: </span><span class="si">{</span><span class="n">slope</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">MSE: </span><span class="si">{</span><span class="n">mse</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">MAE: </span><span class="si">{</span><span class="n">mae</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">transform</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">ax_joint</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+
+            <span class="c1"># For visalisation when spliting dataset to train/test.</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">dataset2</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="n">dataset2</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">],</span> 
+                            <span class="n">ax</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">ax_joint</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        
+        <span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; vs. &quot;</span><span class="p">,</span> <span class="s2">&quot; vs.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span> <span class="c1"># adjust layout in this &#39;jointplot&#39;</span>
+        <span class="c1"># g.set_axis_labels(xlabel=value[&quot;label&quot;].replace(&quot;_&quot;, &quot; &quot;).capitalize(), ylabel=&quot;Median House Value&quot;, fontsize=12)</span>
+
+        <span class="c1"># Transmit the &#39;jointplot&#39; figure to plt subplot.</span>
+        <span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvas</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">buffer_rgba</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>  
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Median House Value&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        
+        <span class="c1"># Close to avoid showing `jointplot` independently.</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">fig</span><span class="p">)</span> 
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Draw scatter plots using the original dataset.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[11]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">ShowJoinPlot</span><span class="p">(</span><span class="n">var_dict</span><span class="o">=</span><span class="n">variables_dict</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">housing</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output">
+<img alt="No description has been provided for this image" src="javascript://"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Some observations with the original dataset:</p>
+<ul>
+<li><p>Median House Value vs. Median Income:</p>
+<ol>
+<li>Outliers: Some outliers are exists as shown at the top of the plot.</li>
+<li>Positive correlation: Higher median income is associated with hogher house prices.</li>
+</ol>
+</li>
+<li><p>Median House Value vs. Population:</p>
+<ol>
+<li>No clear correlation: There is no clear correlation between population and median house value.</li>
+<li>Smaller communities: Most of the data are closed to the lower population, this may shows that the dataset comes from smaller communities.</li>
+</ol>
+</li>
+<li><p>Median House Value vs. Number of Households:</p>
+<ol>
+<li>No clear correlation: There is no clear correlation between number of households and median house value.</li>
+<li>Smaller communities: Most of the data are closed to the lower households, this may shows that the dataset comes from smaller communities.</li>
+</ol>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Try to remove the outliers and draw scatter plot again.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># After filtering, there are 19675 records, versus 20640 before filtering</span>
+<span class="n">housing_preprocessed</span> <span class="o">=</span> <span class="n">housing</span><span class="p">[</span><span class="n">housing</span><span class="o">.</span><span class="n">median_house_value</span> <span class="o">&lt;</span> <span class="mi">500000</span><span class="p">]</span>
+<span class="c1"># After filtering, there are 19648 records, versus 20640 before filtering</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;After filtering, there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">housing_preprocessed</span><span class="p">)</span><span class="si">}</span><span class="s2"> records, versus </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">housing</span><span class="p">)</span><span class="si">}</span><span class="s2"> before filtering&quot;</span><span class="p">)</span>
+<span class="n">ShowJoinPlot</span><span class="p">(</span><span class="n">var_dict</span><span class="o">=</span><span class="n">variables_dict</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">housing_preprocessed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>After filtering, there are 19648 records, versus 20640 before filtering
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output">
+<img alt="No description has been provided for this image" src="javascript://"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Some observations after filtering (remove outliers of <code>median_house_value &gt; 500000</code>):</p>
+<ul>
+<li>The distribution of the <code>median house value</code> becomes more similar to the shape of normal distribution.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>More statistic results of these 4 variables (original dataset).</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[13]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">housing</span><span class="p">[[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">,</span> <span class="s2">&quot;median_income&quot;</span><span class="p">,</span> <span class="s2">&quot;population&quot;</span><span class="p">,</span> <span class="s2">&quot;households&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult">
+<div>
+
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>median_house_value</th>
+<th>median_income</th>
+<th>population</th>
+<th>households</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>count</th>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+</tr>
+<tr>
+<th>mean</th>
+<td>206855.816909</td>
+<td>3.870671</td>
+<td>1425.476744</td>
+<td>499.539680</td>
+</tr>
+<tr>
+<th>std</th>
+<td>115395.615874</td>
+<td>1.899822</td>
+<td>1132.462122</td>
+<td>382.329753</td>
+</tr>
+<tr>
+<th>min</th>
+<td>14999.000000</td>
+<td>0.499900</td>
+<td>3.000000</td>
+<td>1.000000</td>
+</tr>
+<tr>
+<th>25%</th>
+<td>119600.000000</td>
+<td>2.563400</td>
+<td>787.000000</td>
+<td>280.000000</td>
+</tr>
+<tr>
+<th>50%</th>
+<td>179700.000000</td>
+<td>3.534800</td>
+<td>1166.000000</td>
+<td>409.000000</td>
+</tr>
+<tr>
+<th>75%</th>
+<td>264725.000000</td>
+<td>4.743250</td>
+<td>1725.000000</td>
+<td>605.000000</td>
+</tr>
+<tr>
+<th>max</th>
+<td>500001.000000</td>
+<td>15.000100</td>
+<td>35682.000000</td>
+<td>6082.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>More statistic results of these 4 variables (filtered dataset).</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[14]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># (remove outliers of `median_house_value &gt; 500000`)</span>
+<span class="n">housing_preprocessed</span><span class="p">[[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">,</span> <span class="s2">&quot;median_income&quot;</span><span class="p">,</span> <span class="s2">&quot;population&quot;</span><span class="p">,</span> <span class="s2">&quot;households&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult">
+<div>
+
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>median_house_value</th>
+<th>median_income</th>
+<th>population</th>
+<th>households</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>count</th>
+<td>19648.000000</td>
+<td>19648.000000</td>
+<td>19648.000000</td>
+<td>19648.000000</td>
+</tr>
+<tr>
+<th>mean</th>
+<td>192055.328583</td>
+<td>3.676411</td>
+<td>1441.368485</td>
+<td>501.192488</td>
+</tr>
+<tr>
+<th>std</th>
+<td>97110.854998</td>
+<td>1.570602</td>
+<td>1144.075196</td>
+<td>383.391367</td>
+</tr>
+<tr>
+<th>min</th>
+<td>14999.000000</td>
+<td>0.499900</td>
+<td>3.000000</td>
+<td>2.000000</td>
+</tr>
+<tr>
+<th>25%</th>
+<td>116475.000000</td>
+<td>2.526300</td>
+<td>796.000000</td>
+<td>282.000000</td>
+</tr>
+<tr>
+<th>50%</th>
+<td>173600.000000</td>
+<td>3.449050</td>
+<td>1179.000000</td>
+<td>411.000000</td>
+</tr>
+<tr>
+<th>75%</th>
+<td>247900.000000</td>
+<td>4.582500</td>
+<td>1746.250000</td>
+<td>606.000000</td>
+</tr>
+<tr>
+<th>max</th>
+<td>499100.000000</td>
+<td>15.000100</td>
+<td>35682.000000</td>
+<td>6082.000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[15]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;std housing: </span><span class="si">{</span><span class="n">housing</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;std housing_preprocessed: </span><span class="si">{</span><span class="n">housing_preprocessed</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">rate</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">housing_preprocessed</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">-</span> <span class="n">housing</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">())</span> <span class="o">/</span> <span class="n">housing</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span> <span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The std of house price reduced </span><span class="si">{</span><span class="mi">0</span><span class="o">-</span><span class="n">rate</span><span class="si">}</span><span class="s2">% after filtering.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>std housing: 115395.61587441387
+std housing_preprocessed: 97110.85499789551
+The std of house price reduced 16.0% after filtering.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>Observation:<a rel="noopener" class="anchor-link" href="#Observation:">&#182;</a></h3><h4>About the 4 variables:<a rel="noopener" class="anchor-link" href="#About-the-4-variables:">&#182;</a></h4><ol>
+<li><p>median_house_value:<br/>
+The median house value for homes in a block (in US Dollars).<br/>
+This is the dependent variable we want to predict in this report.</p>
+</li>
+<li><p>median income:<br/>
+The median income of families in a block (in tens of thousands of US Dollars).
+Based on the review of scatter plot, this variable may be a strong predictor of house prices, since it has a clear positive correlation of the price.</p>
+</li>
+<li><p>population:<br/>
+The total number of people living in a block.
+Based on the review of scatter plot, this could be a weak predictor, since there are no clear relationships with the price.</p>
+</li>
+<li><p>number of households:<br/>
+The total number of home units in a block.
+Based on the review of scatter plot, this could also be a weak predictor, since there are no clear correlation with the price.</p>
+</li>
+</ol>
+<h4>Filtering:<br/></h4>
+<ul>
+<li>Removing outliers can be important:<br/>
+The std of house price reduced 16.0% after filtering.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>4. Run three linear regressions (fitting) between:<a rel="noopener" class="anchor-link" href="#4.-Run-three-linear-regressions-(fitting)-between:">&#182;</a></h3><p>median house value vs. median income
+median house value vs. population
+median house value vs. number of households.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Splitting dataset for training and testing.<br/></p>
+<ul>
+<li>Training set: contains 80% of the filtered data.</li>
+<li>Testing set: contains 20% of the filtered data.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Visualize our dataset (Blue: training set; Brown: testing set)</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[16]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Visualize our dataset</span>
+<span class="n">train_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">housing_preprocessed</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">housing_preprocessed</span><span class="p">[:</span><span class="n">train_size</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">housing_preprocessed</span><span class="p">[</span><span class="n">train_size</span><span class="p">:]</span>
+<span class="n">ShowJoinPlot</span><span class="p">(</span><span class="n">var_dict</span><span class="o">=</span><span class="n">variables_dict</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">dataset2</span><span class="o">=</span><span class="n">test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output">
+<img alt="No description has been provided for this image" src="javascript://"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>Cross validation:<a rel="noopener" class="anchor-link" href="#Cross-validation:">&#182;</a></h3><ul>
+<li>We define a function <code>Gen_cross_valid_dataset()</code> to generate <code>5</code> cross dataset with different training/testing split.<br/></li>
+<li>The cross validation data are stored in <code>df_cross_data</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[17]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">Gen_cross_valid_dataset</span><span class="p">(</span><span class="n">datain</span> <span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">_cross_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">datain</span><span class="p">)):</span>
+        <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">datain</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">datain</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">_cross_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">train</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="n">test</span><span class="p">})</span>  <span class="c1"># 存到 list</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fold </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: Train size = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s2">, Test size = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_df_cross_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">_cross_data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_df_cross_data</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[18]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_cross_data</span> <span class="o">=</span> <span class="n">Gen_cross_valid_dataset</span><span class="p">(</span><span class="n">datain</span><span class="o">=</span><span class="n">housing_preprocessed</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>Fold 1: Train size = 15718, Test size = 3930
+Fold 2: Train size = 15718, Test size = 3930
+Fold 3: Train size = 15718, Test size = 3930
+Fold 4: Train size = 15719, Test size = 3929
+Fold 5: Train size = 15719, Test size = 3929
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>Visualize the data for each cross-validaiton dataset. (Blue: training set; Brown: testing set)</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[19]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Plot for all folders</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df_cross_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">train_k</span> <span class="o">=</span> <span class="n">df_cross_data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>  <span class="c1"># 第一折的 train DataFrame</span>
+    <span class="n">test_k</span> <span class="o">=</span> <span class="n">df_cross_data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>    <span class="c1"># 第一折的 test DataFrame</span>
+    
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># We only plot for the first folder (There are no big differents among the folds.)</span>
+        <span class="n">ShowJoinPlot</span><span class="p">(</span><span class="n">var_dict</span><span class="o">=</span><span class="n">variables_dict</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">train_k</span><span class="p">,</span> <span class="n">dataset2</span><span class="o">=</span><span class="n">test_k</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output">
+<img alt="No description has been provided for this image" src="javascript://"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>Ready for the Linear regressions.<br/></h3>
+<p>We will run and anlysis these modes in the following for loop.<br/></p>
+<p>Each model will be run 5 times:</p>
+<ul>
+<li>Model 1 (Linear regressions: median house value vs. median income)</li>
+<li>Model 2 (Linear regressions: median house value vs. population)</li>
+<li>Model 3 (Linear regressions: median house value vs. numbers of households)</li>
+</ul>
+<p>Each time we will collecte the intercept, slope, MSE and MAE.</p>
+<ul>
+<li>Calculate the mse and mae with the predicted values from training and testing set.</li>
+<li>Store the results into <code>df_model_result_trainset</code> and <code>variables2_dict</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[20]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">regression_results_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># Linear regression</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df_cross_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">train_k</span> <span class="o">=</span> <span class="n">df_cross_data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="n">test_k</span> <span class="o">=</span> <span class="n">df_cross_data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    
+    <span class="c1"># Create dataframes for storing results</span>
+    <span class="n">_df_model_result_trainset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">_df_model_result_testset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">_variables2_dict</span> <span class="o">=</span> <span class="n">variables2_dict</span>
+
+    <span class="c1"># Storing the ground truth</span>
+    <span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_k</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span>
+    <span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_k</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model 1</span>
+<span class="sd">        Running linear regression by &quot;median_income&quot; and &quot;median_house_value&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Train and predict</span>
+    <span class="n">_model1</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">_model1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;median_income&quot;</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]])</span>
+    <span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;median_income&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;median_income&quot;</span><span class="p">]]</span>
+    <span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;m1_median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model1</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;median_income&quot;</span><span class="p">]])</span>
+    <span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;median_income&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_k</span><span class="p">[[</span><span class="s2">&quot;median_income&quot;</span><span class="p">]]</span>
+    <span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;m1_median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model1</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_k</span><span class="p">[[</span><span class="s2">&quot;median_income&quot;</span><span class="p">]])</span>
+
+    <span class="c1"># Collect the intercept, slope, MSE and MAE.</span>
+    <span class="n">_model1_intercept</span><span class="p">,</span> <span class="n">_model1_slope</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_model1</span><span class="o">.</span><span class="n">intercept_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">_model1</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">_variables2_dict</span><span class="p">[</span><span class="s2">&quot;median_income&quot;</span><span class="p">][</span><span class="s2">&quot;intercept&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model1_intercept</span>
+    <span class="n">_variables2_dict</span><span class="p">[</span><span class="s2">&quot;median_income&quot;</span><span class="p">][</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model1_slope</span>
+    <span class="n">_tr_m1_mse</span><span class="p">,</span> <span class="n">_tr_m1_mae</span> <span class="o">=</span> <span class="n">Get_mse_mae</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;m1_median_house_value&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">])</span>
+    <span class="n">_te_m1_mse</span><span class="p">,</span> <span class="n">_te_m1_mae</span> <span class="o">=</span> <span class="n">Get_mse_mae</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;m1_median_house_value&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">])</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model 2</span>
+<span class="sd">        Running linear regression by &quot;population&quot; and &quot;median_house_value&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Train and predict</span>
+    <span class="n">_model2</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">_model2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;population&quot;</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]])</span>
+    <span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;population&quot;</span><span class="p">]]</span>
+    <span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;m2_median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;population&quot;</span><span class="p">]])</span>
+    <span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_k</span><span class="p">[[</span><span class="s2">&quot;population&quot;</span><span class="p">]]</span>
+    <span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;m2_median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model2</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_k</span><span class="p">[[</span><span class="s2">&quot;population&quot;</span><span class="p">]])</span>
+    
+    <span class="c1"># Collect the intercept, slope, MSE and MAE.</span>
+    <span class="n">_model2_intercept</span><span class="p">,</span> <span class="n">_model2_slope</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_model2</span><span class="o">.</span><span class="n">intercept_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">_model2</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">_variables2_dict</span><span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">][</span><span class="s2">&quot;intercept&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model2_intercept</span>
+    <span class="n">_variables2_dict</span><span class="p">[</span><span class="s2">&quot;population&quot;</span><span class="p">][</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model2_slope</span>
+
+    <span class="n">_tr_m2_mse</span><span class="p">,</span> <span class="n">_tr_m2_mae</span> <span class="o">=</span> <span class="n">Get_mse_mae</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;m2_median_house_value&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">])</span>
+    <span class="n">_te_m2_mse</span><span class="p">,</span> <span class="n">_te_m2_mae</span> <span class="o">=</span> <span class="n">Get_mse_mae</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;m2_median_house_value&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">])</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model 3</span>
+<span class="sd">        Running linear regression by &quot;households&quot; and &quot;median_house_value&quot;.</span>
+<span class="sd">        Calculate the mse and mae with the predicted values from training and testing set.</span>
+
+<span class="sd">        Store the results into &#39;df_model_result_trainset&#39; and &#39;variables2_dict&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Train and predict</span>
+    <span class="n">_model3</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">_model3</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;households&quot;</span><span class="p">]],</span> <span class="n">y</span><span class="o">=</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">]])</span>
+    <span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;households&quot;</span><span class="p">]]</span>
+    <span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;m3_median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model3</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_k</span><span class="p">[[</span><span class="s2">&quot;households&quot;</span><span class="p">]])</span>
+    <span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_k</span><span class="p">[[</span><span class="s2">&quot;households&quot;</span><span class="p">]]</span>
+    <span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;m3_median_house_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model3</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_k</span><span class="p">[[</span><span class="s2">&quot;households&quot;</span><span class="p">]])</span>
+
+    <span class="c1"># Collect the intercept, slope, MSE and MAE.</span>
+    <span class="n">_model3_intercept</span><span class="p">,</span> <span class="n">_model3_slope</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_model3</span><span class="o">.</span><span class="n">intercept_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">_model3</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">_variables2_dict</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">][</span><span class="s2">&quot;intercept&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model3_intercept</span>
+    <span class="n">_variables2_dict</span><span class="p">[</span><span class="s2">&quot;households&quot;</span><span class="p">][</span><span class="s2">&quot;slope&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_model3_slope</span>
+
+    <span class="n">_tr_m3_mse</span><span class="p">,</span> <span class="n">_tr_m3_mae</span> <span class="o">=</span> <span class="n">Get_mse_mae</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;m3_median_house_value&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">_df_model_result_trainset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">])</span>
+    <span class="n">_te_m3_mse</span><span class="p">,</span> <span class="n">_te_m3_mae</span> <span class="o">=</span> <span class="n">Get_mse_mae</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;m3_median_house_value&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">_df_model_result_testset</span><span class="p">[</span><span class="s2">&quot;median_house_value&quot;</span><span class="p">])</span>
+    
+    <span class="c1"># Collecte and keep them in _df_regression_result</span>
+    <span class="n">_df_regression_result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s2">&quot;Model&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Model1_median_income&quot;</span><span class="p">,</span> <span class="s2">&quot;Model2_population&quot;</span><span class="p">,</span> <span class="s2">&quot;Model3_households&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Intercept&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_model1_intercept</span><span class="p">,</span> <span class="n">_model2_intercept</span><span class="p">,</span> <span class="n">_model3_intercept</span><span class="p">],</span>
+        <span class="s2">&quot;Slope&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_model1_slope</span><span class="p">,</span> <span class="n">_model2_slope</span><span class="p">,</span> <span class="n">_model3_slope</span><span class="p">],</span>
+        <span class="s2">&quot;MSE_trainset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_tr_m1_mse</span><span class="p">,</span> <span class="n">_tr_m2_mse</span><span class="p">,</span> <span class="n">_tr_m3_mse</span><span class="p">],</span>
+        <span class="s2">&quot;MAE_trainset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_tr_m1_mae</span><span class="p">,</span> <span class="n">_tr_m2_mae</span><span class="p">,</span> <span class="n">_tr_m2_mae</span><span class="p">],</span>
+        <span class="s2">&quot;MSE_testset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_te_m1_mse</span><span class="p">,</span> <span class="n">_te_m2_mse</span><span class="p">,</span> <span class="n">_te_m3_mse</span><span class="p">],</span>
+        <span class="s2">&quot;MAE_testset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_te_m1_mae</span><span class="p">,</span> <span class="n">_te_m2_mae</span><span class="p">,</span> <span class="n">_te_m3_mae</span><span class="p">]</span>
+    <span class="p">})</span>
+    <span class="n">regression_results_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_df_regression_result</span><span class="p">)</span>
+    
+    <span class="c1"># Plot</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># We only plot for the first folder.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scatter plot for the training set will shown bellow.&quot;</span><span class="p">)</span>
+        <span class="n">ShowJoinPlot</span><span class="p">(</span><span class="n">var_dict</span><span class="o">=</span><span class="n">variables_dict</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">train_k</span><span class="p">,</span> <span class="n">var_dict2</span><span class="o">=</span><span class="n">_variables2_dict</span><span class="p">,</span> <span class="n">dataset2</span><span class="o">=</span><span class="n">_df_model_result_trainset</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Scatter plot for the testing set will shown bellow.&quot;</span><span class="p">)</span>
+        <span class="n">ShowJoinPlot</span><span class="p">(</span><span class="n">var_dict</span><span class="o">=</span><span class="n">variables_dict</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">test_k</span><span class="p">,</span> <span class="n">var_dict2</span><span class="o">=</span><span class="n">_variables2_dict</span><span class="p">,</span> <span class="n">dataset2</span><span class="o">=</span><span class="n">_df_model_result_testset</span><span class="p">)</span>
+
+
+<span class="n">df_regression_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">regression_results_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>Scatter plot for the training set will shown bellow.
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output">
+<img alt="No description has been provided for this image" src="javascript://"/>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output">
+<pre>
+Scatter plot for the testing set will shown bellow.
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output">
+<img alt="No description has been provided for this image" src="javascript://"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>Explain about some variables in the code:<a rel="noopener" class="anchor-link" href="#Explain-about-some-variables-in-the-code:">&#182;</a></h3><ul>
+<li><p><code>df_regression_result</code>: <br/>
+Contains the <code>Intercept</code>, <code>Slope</code>, <code>MSE</code> and <code>MAE</code> for the three models.</p>
+</li>
+<li><p><code>df_combined</code>: <br/>
+Contains the numeric dataframes of all variabls from training, testing, and predicting data, will be used for drawing scatter plots.<br/></p>
+<ul>
+<li><code>median_house_value</code>, <code>median_income</code>, <code>population</code>, <code>households</code>: These are the original data from training or testing.</li>
+<li><code>m1_median_house_value</code>, <code>m2_median_house_value</code>, <code>m3_median_house_value</code>: Stores the predicted values by model1.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>5. In a single table for all three linear regressions, provide per regression model:<a rel="noopener" class="anchor-link" href="#5.-In-a-single-table-for-all-three-linear-regressions,-provide-per-regression-model:">&#182;</a></h3><ul>
+<li>We run each model five times with different cross-valided folders.<br/>
+(Model 1 (median_income), Model 2 (population), Model 3 (households))</li>
+<li>Totally there are 15 rows of analysis data shown as bellow (stored in <code>df_regression_results</code>).</li>
+</ul>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">df_regression_results</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output">
+<div>
+
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Model</th>
+<th>Intercept</th>
+<th>Slope</th>
+<th>MSE_trainset</th>
+<th>MAE_trainset</th>
+<th>MSE_testset</th>
+<th>MAE_testset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Model1_median_income</td>
+<td>45112.88</td>
+<td>39944.58</td>
+<td>5.445075e+09</td>
+<td>56213.35</td>
+<td>5.649551e+09</td>
+<td>57279.60</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Model2_population</td>
+<td>190579.20</td>
+<td>1.02</td>
+<td>9.389310e+09</td>
+<td>77739.91</td>
+<td>9.584337e+09</td>
+<td>78625.50</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Model3_households</td>
+<td>180283.92</td>
+<td>23.45</td>
+<td>9.308329e+09</td>
+<td>77739.91</td>
+<td>9.486066e+09</td>
+<td>78124.23</td>
+</tr>
+<tr>
+<th>3</th>
+<td>Model1_median_income</td>
+<td>44152.31</td>
+<td>40247.67</td>
+<td>5.484591e+09</td>
+<td>56547.31</td>
+<td>5.492307e+09</td>
+<td>55951.52</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Model2_population</td>
+<td>189702.32</td>
+<td>1.61</td>
+<td>9.468213e+09</td>
+<td>78227.53</td>
+<td>9.270032e+09</td>
+<td>76676.71</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Model3_households</td>
+<td>179489.94</td>
+<td>25.02</td>
+<td>9.378828e+09</td>
+<td>78227.53</td>
+<td>9.204130e+09</td>
+<td>76194.57</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Model1_median_income</td>
+<td>44764.28</td>
+<td>39933.96</td>
+<td>5.458415e+09</td>
+<td>56326.70</td>
+<td>5.597310e+09</td>
+<td>56523.88</td>
+</tr>
+<tr>
+<th>7</th>
+<td>Model2_population</td>
+<td>189322.11</td>
+<td>1.62</td>
+<td>9.388754e+09</td>
+<td>77741.90</td>
+<td>9.588661e+09</td>
+<td>78336.48</td>
+</tr>
+<tr>
+<th>8</th>
+<td>Model3_households</td>
+<td>179044.31</td>
+<td>25.17</td>
+<td>9.298625e+09</td>
+<td>77741.90</td>
+<td>9.525879e+09</td>
+<td>77864.61</td>
+</tr>
+<tr>
+<th>9</th>
+<td>Model1_median_income</td>
+<td>45346.29</td>
+<td>39970.48</td>
+<td>5.538835e+09</td>
+<td>56584.64</td>
+<td>5.274720e+09</td>
+<td>56051.28</td>
+</tr>
+<tr>
+<th>10</th>
+<td>Model2_population</td>
+<td>191725.43</td>
+<td>0.52</td>
+<td>9.530390e+09</td>
+<td>78380.06</td>
+<td>9.023358e+09</td>
+<td>76396.94</td>
+</tr>
+<tr>
+<th>11</th>
+<td>Model3_households</td>
+<td>180683.08</td>
+<td>23.65</td>
+<td>9.452094e+09</td>
+<td>78380.06</td>
+<td>8.911901e+09</td>
+<td>75917.14</td>
+</tr>
+<tr>
+<th>12</th>
+<td>Model1_median_income</td>
+<td>45860.83</td>
+<td>39837.44</td>
+<td>5.502289e+09</td>
+<td>56512.69</td>
+<td>5.421267e+09</td>
+<td>56414.98</td>
+</tr>
+<tr>
+<th>13</th>
+<td>Model2_population</td>
+<td>190621.48</td>
+<td>1.00</td>
+<td>9.363353e+09</td>
+<td>77496.22</td>
+<td>9.688276e+09</td>
+<td>79607.40</td>
+</tr>
+<tr>
+<th>14</th>
+<td>Model3_households</td>
+<td>180074.07</td>
+<td>23.82</td>
+<td>9.280305e+09</td>
+<td>77496.22</td>
+<td>9.597918e+09</td>
+<td>79063.28</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<p>For each model, we compute the average, as shown bellow.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&#160;[22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_averages</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="n">cols_to_avg</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Intercept&quot;</span><span class="p">,</span> <span class="s2">&quot;Slope&quot;</span><span class="p">,</span> <span class="s2">&quot;MSE_trainset&quot;</span><span class="p">,</span> <span class="s2">&quot;MAE_trainset&quot;</span><span class="p">,</span> <span class="s2">&quot;MSE_testset&quot;</span><span class="p">,</span> <span class="s2">&quot;MAE_testset&quot;</span><span class="p">]</span>
+    <span class="n">df_avg</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Model&quot;</span><span class="p">)[</span><span class="n">cols_to_avg</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">df_avg</span>
+
+<span class="n">df_model_averages</span> <span class="o">=</span> <span class="n">compute_averages</span><span class="p">(</span><span class="n">df_regression_results</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_model_averages</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output">
+<div>
+
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Model</th>
+<th>Intercept</th>
+<th>Slope</th>
+<th>MSE_trainset</th>
+<th>MAE_trainset</th>
+<th>MSE_testset</th>
+<th>MAE_testset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Model1_median_income</td>
+<td>45047.32</td>
+<td>39986.83</td>
+<td>5.485841e+09</td>
+<td>56436.94</td>
+<td>5.487031e+09</td>
+<td>56444.25</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Model2_population</td>
+<td>190390.11</td>
+<td>1.15</td>
+<td>9.428004e+09</td>
+<td>77917.12</td>
+<td>9.430933e+09</td>
+<td>77928.61</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Model3_households</td>
+<td>179915.06</td>
+<td>24.22</td>
+<td>9.343636e+09</td>
+<td>77917.12</td>
+<td>9.345179e+09</td>
+<td>77432.77</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<h3>6. Summary<a rel="noopener" class="anchor-link" href="#6.-Summary">&#182;</a></h3>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput">
+<ol>
+<li>Based on the results, model1 which is trained by median_income has the lowest mse and mae error compared to other models. It was related to the observation by the scatterplot.</li>
+<li>However, in this case liniear regression approach is still not good enough to predict the housing price. Since our dataset are located in such a nonlinear way, I think is impossible to predict by using linear approach, maybe some other non-linear methods will be better.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+
+<script type="module" src="https://s.brightspace.com/lib/bsi/2025.3.233/unbundled/mathjax.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+						if (document.querySelector('math') || /\$\$|\\\(|\\\[|\\begin{|\\ref{|\\eqref{/.test(document.body.innerHTML)) {
+							document.querySelectorAll('mspace[linebreak="newline"]').forEach(elm => {
+								elm.setAttribute('style', 'display: block; height: 0.5rem;');
+							});
+
+							window.D2L.MathJax.loadMathJax({
+								outputScale: 1.5,
+								renderLatex: true,
+								enableMML3Support: false
+							});
+						}
+					});</script><script type="module" src="https://s.brightspace.com/lib/bsi/2025.3.233/unbundled/prism.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+					document.querySelectorAll('.d2l-code').forEach(code => {
+						window.D2L.Prism.formatCodeElement(code);
+					});
+				});</script><script type="module" src="https://s.brightspace.com/lib/bsi/2025.3.233/unbundled/embeds.js"></script><script type="text/javascript">document.addEventListener('DOMContentLoaded', function() {
+					window.D2L.EmbedRenderer.renderEmbeds(document.body);
+				});</script></body></html>
